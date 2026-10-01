@@ -605,6 +605,8 @@ def gui():
     btn.config(command=start)
     if "--selftest" in sys.argv:
         root.after(200, root.destroy)
+    import aktualizacja
+    aktualizacja.start(root, "DawidBochno/Podglad-KSeF", "main", "podglad_ksef.py")
     root.mainloop()
 
 
@@ -685,6 +687,8 @@ def selftest():
         shutil.copy(os.path.join(ex, "faktura_MF_FA3.xml"), os.path.join(trudny, "fa 100%.xml"))
         run(trudny, trudny, pdf=True, log=quiet)
         assert os.path.isfile(os.path.join(trudny, "fa 100%.pdf")), os.listdir(trudny)
+    import aktualizacja
+    aktualizacja.selftest()
     print("selftest OK" + (" (z PDF przez Edge)" if find_edge() else " (bez PDF - brak Edge)"))
 
 

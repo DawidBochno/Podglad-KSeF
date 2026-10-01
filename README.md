@@ -7,6 +7,8 @@ pod dokumenty księgowe.
 
 Obsługuje schematy **FA(3)** (obowiązujący od 2026 r.) i **FA(2)**.
 
+![Okno programu](docs/okno.png)
+
 ## Co pokazuje
 
 - **Nagłówek:** rodzaj faktury (VAT, korygująca, zaliczkowa, rozliczeniowa,
@@ -55,14 +57,54 @@ PDF jest drukowany przez **Microsoft Edge**, który jest w każdym Windows
 profilu, więc nie przeszkadza w otwartej przeglądarce. Bez Edge powstają
 same pliki HTML, które można otworzyć i wydrukować w dowolnej przeglądarce.
 
-## Szybki start
+## Instalacja (jednorazowo)
 
-1. `install.bat` — sprawdza Pythona i uruchamia self-test. Program używa
-   **tylko biblioteki standardowej Pythona**, nic nie jest doinstalowywane.
-2. Wrzuć pliki XML do folderu `INPUT`.
-3. `uruchom.bat` → **Generuj podgląd** → **Otwórz folder wyników**.
+1. **Python** — pobierz z [python.org](https://www.python.org/downloads/windows/)
+   (wersja 3.9 lub nowsza). W instalatorze zaznacz **„Add python.exe to PATH”**.
+   Opcja „tcl/tk and IDLE” jest zaznaczona domyślnie i musi taka zostać.
+   Uprawnienia administratora nie są potrzebne.
+2. **Program** — na stronie [github.com/DawidBochno/Podglad-KSeF](https://github.com/DawidBochno/Podglad-KSeF)
+   kliknij zielony przycisk **Code → Download ZIP**. Rozpakuj archiwum,
+   np. do `C:\Programy\Podglad KSeF`. Nie uruchamiaj programu z wnętrza ZIP-a.
+3. Kliknij dwukrotnie **`install.bat`**. Program nie potrzebuje dodatkowych bibliotek, więc instalacja tylko sprawdza Pythona i uruchamia test. Na końcu pojawia się
+   **„selftest OK”**, co znaczy, że wszystko działa.
+   Jeśli Windows pokaże „System Windows ochronił ten komputer”, kliknij
+   **Więcej informacji → Uruchom mimo to**.
+4. Program uruchamia się plikiem **`uruchom.bat`**. Wygodnie jest zrobić
+   skrót na pulpicie: prawy przycisk na `uruchom.bat` → **Wyślij do →
+   Pulpit (utwórz skrót)**.
 
-Wymaga Pythona 3.9+ z opcjami „Add python.exe to PATH” i „tcl/tk and IDLE”.
+## Jak używać
+
+1. Uruchom `uruchom.bat`.
+2. **Plik XML lub folder** — jedna faktura (**Plik…**) albo folder
+   z wieloma plikami XML pobranymi z KSeF (**Folder…**). Domyślnie `INPUT`.
+3. **Folder wyjściowy** — tu trafią podglądy (domyślnie `OUTPUT`).
+4. **Utwórz też PDF** — zostaw zaznaczone, żeby oprócz HTML powstał PDF
+   do wydruku lub archiwum.
+5. Kliknij **Generuj podgląd**, a potem **Otwórz folder wyników**.
+   Przy folderze faktur powstaje też `zestawienie.csv` do Excela.
+
+Fragment podglądu przykładowej faktury korygującej dla gminy
+(`przyklad/`):
+
+![Podgląd faktury](docs/faktura.png)
+
+## Aktualizacje
+
+Po uruchomieniu program sprawdza w tle na GitHubie, czy jest nowa wersja.
+Jeśli jest, pyta **„Pobrać i zainstalować teraz?”**. Pobierane są tylko
+zmienione pliki programu. Foldery `INPUT`, `OUTPUT`, ustawienia i pliki
+w `przyklad/` nie są nadpisywane. Po aktualizacji zamknij i uruchom program ponownie. Jeśli program
+o to poprosi, uruchom też raz `install.bat` (zmieniły się biblioteki).
+
+- Do GitHuba trafia tylko zapytanie o listę plików programu, **nigdy
+  dokumenty ani dane**.
+- Bez internetu albo przy blokadzie (np. UTM) program działa normalnie,
+  bez żadnego komunikatu.
+- **Wyłączenie** (np. gdy programy aktualizuje dział IT): utwórz w folderze
+  programu pusty plik o nazwie `NIE_AKTUALIZUJ`.
+- Kopię pobraną przez `git clone` aktualizuje się poleceniem `git pull`.
 
 ## Przykłady
 
