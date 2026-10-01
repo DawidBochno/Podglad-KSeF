@@ -12,6 +12,7 @@ import csv
 import html
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -19,6 +20,7 @@ import threading
 import traceback
 import xml.etree.ElementTree as ET
 from decimal import Decimal, InvalidOperation
+from pathlib import Path
 
 if getattr(sys, "frozen", False):
     APP_DIR = os.path.dirname(sys.executable)
@@ -81,8 +83,7 @@ def qty(s):
     d = dec(s)
     if d is None:
         return s or ""
-    t = format(d.normalize(), "f") if d == d.to_integral() or d.as_tuple().exponent < 0 else str(d)
-    return t.replace(".", ",")
+    return format(d.normalize(), "f").replace(".", ",")
 
 
 _J = ["", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć"]
@@ -287,8 +288,9 @@ def parse(path):
         rachunki.append(" · ".join(x for x in (grupy, r.t("NazwaBanku"), r.t("SWIFT"), r.t("OpisRachunku")) if x))
     terminy = []
     for t in pl.all("TerminPlatnosci"):
+        # FA(3): TerminOpis to struktura; FA(2): zwykly tekst
         opis = " ".join(x for x in (t.t("TerminOpis/Ilosc"), t.t("TerminOpis/Jednostka"),
-                                    t.t("TerminOpis/ZdarzeniePoczatkowe")) if x)
+                                    t.t("TerminOpis/ZdarzeniePoczatkowe")) if x) or t.t("TerminOpis")
         terminy.append(" ".join(x for x in (data_pl(t.t("Termin")), "(%s)" % opis if opis else "") if x))
     forma = FORMA_PLATNOSCI.get(pl.t("FormaPlatnosci"), "") or pl.t("OpisPlatnosci")
     zaplacono = "zapłacono" + (" " + data_pl(pl.t("DataZaplaty")) if pl.t("DataZaplaty") else "") \
@@ -465,12 +467,15 @@ def find_edge():
 
 
 def to_pdf(edge, html_path, pdf_path):
-    with tempfile.TemporaryDirectory() as prof:  # osobny profil - nie koliduje z otwartym Edge
+    prof = tempfile.mkdtemp()  # osobny profil - nie koliduje z otwartym Edge
+    try:
         subprocess.run([edge, "--headless", "--disable-gpu", "--no-pdf-header-footer",
                         "--user-data-dir=" + prof, "--print-to-pdf=" + os.path.abspath(pdf_path),
-                        "file:///" + os.path.abspath(html_path).replace("\\", "/")],
+                        Path(html_path).resolve().as_uri()],  # koduje spacje, #, % i polskie znaki
                        capture_output=True, timeout=120,
                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    finally:
+        shutil.rmtree(prof, ignore_errors=True)  # Edge bywa jeszcze chwile w pamieci i trzyma pliki
     if not os.path.isfile(pdf_path):
         raise RuntimeError("Edge nie utworzyl pliku PDF")
 
@@ -642,6 +647,22 @@ def selftest():
     assert "<script" not in render(dict(kor, nr="<script>alert(1)</script>"))  # wartosci sa escapowane
 
     tmp = tempfile.mkdtemp()
+    # FA(2): inna przestrzen nazw, TerminOpis jako tekst
+    fa2 = os.path.join(tmp, "fa2.xml")
+    with open(fa2, "w", encoding="utf-8") as fh:
+        fh.write('<Faktura xmlns="http://crd.gov.pl/wzor/2023/06/29/12648/"><Naglowek>'
+                 '<KodFormularza kodSystemowy="FA (2)" wersjaSchemy="1-0E">FA</KodFormularza></Naglowek>'
+                 '<Podmiot1><DaneIdentyfikacyjne><NIP>5265877635</NIP><Nazwa>S</Nazwa></DaneIdentyfikacyjne></Podmiot1>'
+                 '<Fa><KodWaluty>EUR</KodWaluty><P_1>2025-06-30</P_1><P_2>F/1</P_2><P_13_1>100</P_13_1>'
+                 '<P_14_1>23</P_14_1><P_14_1W>98.10</P_14_1W><P_15>123</P_15><RodzajFaktury>VAT</RodzajFaktury>'
+                 '<FaWiersz><NrWierszaFa>1</NrWierszaFa><P_7>Usluga</P_7><P_8B>1.500</P_8B><P_11>100</P_11>'
+                 '<P_12>23</P_12></FaWiersz><Platnosc><TerminPlatnosci><Termin>2025-07-14</Termin>'
+                 '<TerminOpis>14 dni od dostawy</TerminOpis></TerminPlatnosci></Platnosc></Fa></Faktura>')
+    f2 = parse(fa2)
+    assert f2["schemat"] == "FA (2)" and f2["platnosc"]["terminy"] == ["14.07.2025 (14 dni od dostawy)"], f2["platnosc"]
+    assert f2["sumy"][0]["vat_pln"] == D("98.10") and "VAT w PLN" in render(f2) and "EUR" in slownie(D(123), "EUR")
+    assert qty(f2["wiersze"][0]["ilosc"]) == "1,5" and not f2["ostrzezenia"]
+    os.remove(fa2)
     bad = os.path.join(tmp, "upo.xml")
     with open(bad, "w", encoding="utf-8") as fh:
         fh.write("<Potwierdzenie/>")
@@ -651,7 +672,7 @@ def selftest():
     except ValueError:
         pass
 
-    msgs = []
+    msgs, quiet = [], (lambda m: None)
     res = run(ex, tmp, pdf=find_edge() is not None, log=msgs.append)
     assert len(res) == 2 and os.path.isfile(os.path.join(tmp, "zestawienie.csv")), msgs
     with open(os.path.join(tmp, "zestawienie.csv"), encoding="utf-8-sig") as fh:
@@ -659,6 +680,11 @@ def selftest():
     assert rows[0] == CSV_COLS and len(rows) == 3 and rows[2][11] == "33569,50", rows
     if find_edge():
         assert os.path.isfile(os.path.join(tmp, "faktura_MF_FA3.pdf"))
+        trudny = os.path.join(tmp, "Faktury #1 – żółć")
+        os.makedirs(trudny)
+        shutil.copy(os.path.join(ex, "faktura_MF_FA3.xml"), os.path.join(trudny, "fa 100%.xml"))
+        run(trudny, trudny, pdf=True, log=quiet)
+        assert os.path.isfile(os.path.join(trudny, "fa 100%.pdf")), os.listdir(trudny)
     print("selftest OK" + (" (z PDF przez Edge)" if find_edge() else " (bez PDF - brak Edge)"))
 
 
