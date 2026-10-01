@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Przykład fikcyjny: faktura korygująca dla gminy (JST), FA(3). Dane wymyślone. -->
+<Faktura xmlns="http://crd.gov.pl/wzor/2025/06/25/13775/">
+    <Naglowek>
+        <KodFormularza kodSystemowy="FA (3)" wersjaSchemy="1-0E">FA</KodFormularza>
+        <WariantFormularza>3</WariantFormularza>
+        <DataWytworzeniaFa>2026-01-15T09:12:00Z</DataWytworzeniaFa>
+        <SystemInfo>Przykład - Podgląd KSeF</SystemInfo>
+    </Naglowek>
+    <Podmiot1>
+        <DaneIdentyfikacyjne>
+            <NIP>5265877635</NIP>
+            <Nazwa>Przykładowe Usługi Komunalne Sp. z o.o.</Nazwa>
+        </DaneIdentyfikacyjne>
+        <Adres>
+            <KodKraju>PL</KodKraju>
+            <AdresL1>ul. Przemysłowa 5</AdresL1>
+            <AdresL2>00-950 Przykładowo</AdresL2>
+        </Adres>
+        <DaneKontaktowe>
+            <Email>faktury@przyklad.example</Email>
+            <Telefon>22 100 20 30</Telefon>
+        </DaneKontaktowe>
+    </Podmiot1>
+    <Podmiot2>
+        <DaneIdentyfikacyjne>
+            <NIP>1234563218</NIP>
+            <Nazwa>Gmina Przykładowo</Nazwa>
+        </DaneIdentyfikacyjne>
+        <Adres>
+            <KodKraju>PL</KodKraju>
+            <AdresL1>ul. Główna 1</AdresL1>
+            <AdresL2>00-001 Przykładowo</AdresL2>
+        </Adres>
+        <NrKlienta>K/0042</NrKlienta>
+        <JST>1</JST>
+        <GV>2</GV>
+    </Podmiot2>
+    <Podmiot3>
+        <DaneIdentyfikacyjne>
+            <NIP>1111111111</NIP>
+            <Nazwa>Urząd Gminy Przykładowo</Nazwa>
+        </DaneIdentyfikacyjne>
+        <Adres>
+            <KodKraju>PL</KodKraju>
+            <AdresL1>ul. Główna 1</AdresL1>
+            <AdresL2>00-001 Przykładowo</AdresL2>
+        </Adres>
+        <Rola>8</Rola>
+    </Podmiot3>
+    <Fa>
+        <KodWaluty>PLN</KodWaluty>
+        <P_1>2026-01-15</P_1>
+        <P_1M>Przykładowo</P_1M>
+        <P_2>FK/3/01/2026</P_2>
+        <P_13_1>-900.00</P_13_1>
+        <P_14_1>-207.00</P_14_1>
+        <P_13_2>-100.00</P_13_2>
+        <P_14_2>-8.00</P_14_2>
+        <P_13_7>-50.00</P_13_7>
+        <P_15>-1265.00</P_15>
+        <Adnotacje>
+            <P_16>2</P_16>
+            <P_17>2</P_17>
+            <P_18>2</P_18>
+            <P_18A>1</P_18A>
+            <Zwolnienie>
+                <P_19>1</P_19>
+                <P_19A>art. 43 ust. 1 pkt 37 ustawy o VAT</P_19A>
+            </Zwolnienie>
+            <NoweSrodkiTransportu>
+                <P_22N>1</P_22N>
+            </NoweSrodkiTransportu>
+            <P_23>2</P_23>
+            <PMarzy>
+                <P_PMarzyN>1</P_PMarzyN>
+            </PMarzy>
+        </Adnotacje>
+        <RodzajFaktury>KOR</RodzajFaktury>
+        <PrzyczynaKorekty>Błędna ilość odebranych odpadów w grudniu 2025 r.</PrzyczynaKorekty>
+        <TypKorekty>2</TypKorekty>
+        <DaneFaKorygowanej>
+            <DataWystFaKorygowanej>2026-01-05</DataWystFaKorygowanej>
+            <NrFaKorygowanej>FV/12/2025/87</NrFaKorygowanej>
+            <NrKSeF>1</NrKSeF>
+            <NrKSeFFaKorygowanej>5265877635-20260105-01000017B2C4-34</NrKSeFFaKorygowanej>
+        </DaneFaKorygowanej>
+        <DodatkowyOpis>
+            <Klucz>Okres rozliczeniowy</Klucz>
+            <Wartosc>grudzień 2025</Wartosc>
+        </DodatkowyOpis>
+        <FaWiersz>
+            <NrWierszaFa>1</NrWierszaFa>
+            <P_7>Odbiór i zagospodarowanie odpadów komunalnych – grudzień 2025</P_7>
+            <Indeks>ODP-01</Indeks>
+            <P_8A>t</P_8A>
+            <P_8B>10</P_8B>
+            <P_9A>450.00</P_9A>
+            <P_11>4500.00</P_11>
+            <P_12>23</P_12>
+            <StanPrzed>1</StanPrzed>
+        </FaWiersz>
+        <FaWiersz>
+            <NrWierszaFa>2</NrWierszaFa>
+            <P_7>Odbiór i zagospodarowanie odpadów komunalnych – grudzień 2025</P_7>
+            <Indeks>ODP-01</Indeks>
+            <P_8A>t</P_8A>
+            <P_8B>8</P_8B>
+            <P_9A>450.00</P_9A>
+            <P_11>3600.00</P_11>
+            <P_12>23</P_12>
+        </FaWiersz>
+        <FaWiersz>
+            <NrWierszaFa>3</NrWierszaFa>
+            <P_7>Dzierżawa pojemników 1100 l (korekta)</P_7>
+            <P_8A>szt.</P_8A>
+            <P_8B>-2</P_8B>
+            <P_9A>50.00</P_9A>
+            <P_11>-100.00</P_11>
+            <P_12>8</P_12>
+        </FaWiersz>
+        <FaWiersz>
+            <NrWierszaFa>4</NrWierszaFa>
+            <P_7>Opłata administracyjna (korekta)</P_7>
+            <P_8A>usł.</P_8A>
+            <P_8B>-1</P_8B>
+            <P_9A>50.00</P_9A>
+            <P_11>-50.00</P_11>
+            <P_12>zw</P_12>
+        </FaWiersz>
+        <Platnosc>
+            <TerminPlatnosci>
+                <Termin>2026-01-29</Termin>
+            </TerminPlatnosci>
+            <FormaPlatnosci>6</FormaPlatnosci>
+            <RachunekBankowy>
+                <NrRB>12102010260000040201234567</NrRB>
+                <NazwaBanku>Bank Przykładowy S.A.</NazwaBanku>
+            </RachunekBankowy>
+        </Platnosc>
+        <WarunkiTransakcji>
+            <Umowy>
+                <DataUmowy>2025-01-02</DataUmowy>
+                <NrUmowy>ZP.272.15.2025</NrUmowy>
+            </Umowy>
+        </WarunkiTransakcji>
+    </Fa>
+    <Stopka>
+        <Informacje>
+            <StopkaFaktury>Kwota korekty zostanie rozliczona z najbliższą płatnością.</StopkaFaktury>
+        </Informacje>
+        <Rejestry>
+            <KRS>0000123456</KRS>
+            <REGON>123456785</REGON>
+            <BDO>000012345</BDO>
+        </Rejestry>
+    </Stopka>
+</Faktura>
