@@ -9,13 +9,22 @@ if not defined PY (
 )
 if not defined PY (
     echo BLAD: nie znaleziono Pythona.
-    echo Zainstaluj Python 3.9+ z https://www.python.org/downloads/
+    echo Zainstaluj Python 3.11+ z https://www.python.org/downloads/
     echo Podczas instalacji zaznacz "Add python.exe to PATH".
     pause
     exit /b 1
 )
 echo === Python ===
 %PY% --version
+%PY% -c "import sys; sys.exit(sys.version_info < (3, 11))"
+if errorlevel 1 (
+    echo.
+    echo UWAGA: ta wersja Pythona jest przestarzala i nie dostaje juz poprawek
+    echo bezpieczenstwa. Zainstaluj aktualnego Pythona ^(3.11 lub nowszego^) z
+    echo https://www.python.org/downloads/ i uruchom install.bat ponownie.
+    echo Nacisnij dowolny klawisz, aby mimo to kontynuowac.
+    pause >nul
+)
 
 echo.
 echo === Test ===
